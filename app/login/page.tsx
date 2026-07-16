@@ -72,13 +72,7 @@ export default function LoginPage() {
               <button disabled={loading} className="group flex h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-brand to-blue-600 text-sm font-black text-white shadow-[0_16px_35px_rgba(37,99,235,.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60">{loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}<FontAwesomeIcon icon={faArrowLeft} className="h-3.5 w-3.5 transition group-hover:-translate-x-1" /></button>
             </form>
             <p className="mt-6 text-center text-sm text-slate-500">ليس لديك حساب؟ <Link href="/register" className="font-black text-brand">أنشئ حسابًا مجانيًا</Link></p>
-            <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-3">
-              <p className="mb-2 text-center text-[10px] font-black text-amber-700">حسابات تجربة محلية — غيّر كلمات المرور قبل النشر</p>
-              <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => { setIdentifier("01012345678"); setPassword("Student@12345"); }} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white bg-white px-3 py-2 text-[10px] font-black text-navy shadow-sm"><FontAwesomeIcon icon={faUserGraduate} className="text-brand" /> حساب الطالب</button>
-                <button type="button" onClick={() => { setIdentifier("admin@codepath.local"); setPassword("Admin@12345"); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-navy px-3 py-2 text-[10px] font-black text-white"><FontAwesomeIcon icon={faUserShield} className="text-cyan-300" /> حساب الأدمن</button>
-              </div>
-            </div>
+         
           </div>
         </div>
       </section>
