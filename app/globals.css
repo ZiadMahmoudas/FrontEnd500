@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #F8FAFC;
+  color: #0F172A;
+}
+
+::selection {
+  background: #38BDF8;
+  color: #0F172A;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+.font-feature-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus ring accessible everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #38BDF8;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.animate-dash {
+  stroke-dasharray: 6 6;
+  animation: dash 20s linear infinite;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.container-app {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-app {
+    padding-inline: 2rem;
+  }
+}
+
+.card-surface {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px -6px rgba(15, 23, 42, 0.08);
+}
+
+.code-window {
+  background: #0B1224;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px -20px rgba(37, 99, 235, 0.5);
+}
+
+@layer components {
+  .admin-input {
+    @apply h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-navy outline-none transition placeholder:text-slate-400 focus:border-brand/40 focus:bg-white focus:ring-4 focus:ring-brand/5;
+  }
+}
