@@ -29,6 +29,8 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import BrandIcon from "@/components/ui/BrandIcon";
 import { courses, platformStats, testimonials, faqs } from "@/lib/mock-data";
 import { formatNumber } from "@/lib/utils";
+import JsonLd from "@/components/JsonLd";
+import { absoluteUrl, siteConfig } from "@/lib/site-config";
 
 const heroStudents = [
   "photo-1500648767791-00dcc994a43e",
@@ -41,6 +43,45 @@ export default function HomePage() {
   return (
     <div className="min-h-screen overflow-hidden bg-white">
       <Navbar />
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "EducationalOrganization",
+            name: siteConfig.fullName,
+            alternateName: ["المهاجر", "الثواني الأخيرة"],
+            url: siteConfig.siteUrl,
+            logo: absoluteUrl(siteConfig.logo),
+            image: absoluteUrl(siteConfig.cover),
+            description: siteConfig.description,
+            telephone: `+${siteConfig.phoneInternational}`,
+            founder: { "@type": "Person", name: siteConfig.teacherName },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: siteConfig.teacherName,
+            jobTitle: "مدرس الحاسب الآلي والبرمجة",
+            url: absoluteUrl("/about"),
+            image: absoluteUrl(siteConfig.cover),
+            worksFor: { "@type": "EducationalOrganization", name: siteConfig.fullName },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: siteConfig.fullName,
+            alternateName: "المهاجر",
+            url: siteConfig.siteUrl,
+            inLanguage: "ar-EG",
+          },
+        ]}
+      />
+
+      <section className="bg-[#020713] px-2 py-3 sm:px-4">
+        <div className="container-app overflow-hidden rounded-[22px] border border-blue-400/20 bg-[#020713] shadow-[0_22px_70px_rgba(2,12,32,.28)]">
+          <Image src="/brand/cover.png" alt="الأستاذ محمود المهاجر - منصة الثواني الأخيرة لمراجعة الحاسب الآلي" width={1366} height={288} priority className="h-auto w-full" sizes="100vw" />
+        </div>
+      </section>
 
       <section className="relative isolate overflow-hidden bg-[#07111f] text-white">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_15%,rgba(37,99,235,.42),transparent_30%),radial-gradient(circle_at_80%_5%,rgba(34,211,238,.18),transparent_27%),linear-gradient(135deg,#07111f_0%,#0b1f38_55%,#07111f_100%)]" />
@@ -50,14 +91,14 @@ export default function HomePage() {
         <div className="container-app grid min-h-[760px] gap-12 py-16 lg:grid-cols-[1.02fr_.98fr] lg:items-center lg:py-20">
           <div className="relative z-10">
             <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-black text-cyan-200 backdrop-blur">
-              <FontAwesomeIcon icon={faWandMagicSparkles} className="h-3.5 w-3.5" /> منهج البرمجة الجديد للثانوية العامة
+              <FontAwesomeIcon icon={faWandMagicSparkles} className="h-3.5 w-3.5" /> مع الأستاذ محمود المهاجر • الثواني الأخيرة
             </span>
             <h1 className="mt-7 max-w-3xl font-heading text-4xl font-black leading-[1.28] md:text-6xl lg:text-[64px]">
-              البرمجة مش صعبة،
-              <span className="block bg-gradient-to-l from-cyan-300 via-sky-300 to-blue-400 bg-clip-text text-transparent">بس محتاجة طريق واضح.</span>
+              حاسب آلي وبرمجة،
+              <span className="block bg-gradient-to-l from-amber-300 via-yellow-200 to-cyan-300 bg-clip-text text-transparent">شرح واضح ومراجعة في الوقت الصح.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
-              شرح مبسط، فيديوهات منظمة، ملازم قوية وتدريبات عملية تخليك تفهم المنهج وتطبّق بنفسك — من أول سطر كود لحد امتحان آخر السنة.
+              منصة المهاجر تجمع شرح منهج الحاسب الآلي والبرمجة، المراجعات النهائية، الفيديوهات والملازم في مكان واحد لطلاب الثانوية العامة.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/courses" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-brand to-blue-500 px-7 py-4 text-sm font-black text-white shadow-[0_18px_45px_rgba(37,99,235,.35)] transition hover:-translate-y-1">
@@ -76,7 +117,7 @@ export default function HomePage() {
               </div>
               <div>
                 <div className="flex gap-1 text-amber-300">{Array.from({ length: 5 }).map((_, i) => <FontAwesomeIcon key={i} icon={faStar} className="h-3 w-3" />)}</div>
-                <p className="mt-1 text-xs text-slate-400">آلاف الطلاب بدأوا رحلتهم معانا</p>
+                <p className="mt-1 text-xs text-slate-400">طلاب الثانوية يبدأون رحلتهم مع المهاجر</p>
               </div>
             </div>
           </div>
@@ -222,7 +263,7 @@ export default function HomePage() {
       <section className="px-4 pb-20">
         <div className="container-app relative overflow-hidden rounded-[34px] bg-gradient-to-l from-brand to-blue-700 px-6 py-12 text-center text-white shadow-[0_28px_70px_rgba(37,99,235,.26)] md:px-12">
           <div className="absolute inset-0 bg-grid-lines bg-[size:36px_36px] opacity-10" />
-          <div className="relative"><h2 className="font-heading text-3xl font-black md:text-4xl">ابدأ دلوقتي وخلي أول سطر كود يغيّر نظرتك للمادة</h2><p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-blue-100">سجّل مجانًا وشاهد الدروس المفتوحة، وبعدها اختار الكورس المناسب ليك.</p><div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/register" className="rounded-2xl bg-white px-7 py-4 text-sm font-black text-brand">إنشاء حساب مجاني</Link><Link href="https://wa.me/201000000000" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-4 text-sm font-black"><FontAwesomeIcon icon={faWhatsapp} /> اسألنا على واتساب</Link></div></div>
+          <div className="relative"><h2 className="font-heading text-3xl font-black md:text-4xl">ابدأ دلوقتي وخلي أول سطر كود يغيّر نظرتك للمادة</h2><p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-blue-100">سجّل مجانًا وشاهد الدروس المفتوحة، وبعدها اختار الكورس المناسب ليك.</p><div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/register" className="rounded-2xl bg-white px-7 py-4 text-sm font-black text-brand">إنشاء حساب مجاني</Link><Link href={`https://wa.me/${siteConfig.phoneInternational}`} className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-4 text-sm font-black"><FontAwesomeIcon icon={faWhatsapp} /> اسألنا على واتساب</Link></div></div>
         </div>
       </section>
 

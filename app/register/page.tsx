@@ -5,9 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCheck, faCode, faEnvelope, faGraduationCap, faLocationDot, faLock, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCheck, faEnvelope, faGraduationCap, faLocationDot, faLock, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { register } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
+import BrandLogo from "@/components/BrandLogo";
 
 const grades = ["الأول الثانوي", "الثاني الثانوي", "الثالث الثانوي"];
 const governorates = ["القاهرة", "الجيزة", "الإسكندرية", "الدقهلية", "الشرقية", "الغربية", "أسيوط", "سوهاج", "المنيا", "قنا", "أسوان"];
@@ -40,10 +41,10 @@ export default function RegisterPage() {
   return (
     <main className="grid min-h-screen bg-[#07111f] lg:grid-cols-[.9fr_1.1fr]">
       <section className="relative hidden overflow-hidden lg:block">
-        <Image src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1500&q=88" alt="طلاب يتعلمون" fill priority sizes="(max-width: 1024px) 0px, 50vw" className="object-cover" />
+        <Image src="/brand/cover.png" alt="الأستاذ محمود المهاجر - منصة الثواني الأخيرة" fill priority sizes="(max-width: 1024px) 0px, 55vw" className="object-cover object-[68%_center]" />
         <div className="absolute inset-0 bg-gradient-to-l from-[#07111f]/20 via-[#07111f]/45 to-[#07111f]" />
         <div className="relative flex h-full flex-col justify-between p-12 text-white xl:p-16">
-          <Link href="/" className="flex items-center gap-3"><span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400"><FontAwesomeIcon icon={faCode} /></span><div><p className="font-heading text-2xl font-black">كود<span className="text-cyan-300">باث</span></p><p className="text-[10px] text-slate-400">رحلتك للبرمجة تبدأ هنا</p></div></Link>
+          <Link href="/" className="flex items-center gap-3"><BrandLogo size={56} priority /><div><p className="font-heading text-2xl font-black">المهاجر</p><p className="text-[10px] font-bold text-amber-300">الثواني الأخيرة • رحلتك تبدأ هنا</p></div></Link>
           <div className="max-w-lg"><h1 className="font-heading text-5xl font-black leading-[1.35]">اعمل حسابك، واكتب أول سطر كود النهارده.</h1><div className="mt-8 space-y-4">{["دروس مجانية تبدأ بها فورًا", "تقدم محفوظ على كل أجهزتك", "ملازم واختبارات داخل كل كورس"].map((item) => <div key={item} className="flex items-center gap-3 text-sm font-bold text-slate-200"><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-400/15 text-emerald-300"><FontAwesomeIcon icon={faCheck} className="h-3 w-3" /></span>{item}</div>)}</div></div>
           <p className="text-xs text-slate-500">منصة تعليمية آمنة ومصممة للثانوية العامة</p>
         </div>
@@ -52,7 +53,7 @@ export default function RegisterPage() {
       <section className="relative flex items-center justify-center overflow-hidden px-4 py-10 sm:px-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(37,99,235,.28),transparent_35%),radial-gradient(circle_at_0%_100%,rgba(34,211,238,.1),transparent_35%)] lg:hidden" />
         <div className="relative w-full max-w-2xl">
-          <Link href="/" className="mb-7 flex items-center justify-center gap-3 lg:hidden"><span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400 text-white"><FontAwesomeIcon icon={faCode} /></span><span className="font-heading text-xl font-black text-white">كود<span className="text-cyan-300">باث</span></span></Link>
+          <Link href="/" className="mb-7 flex items-center justify-center gap-3 lg:hidden"><BrandLogo size={54} priority /><span className="font-heading text-xl font-black text-white">المهاجر</span></Link>
           <div className="rounded-[30px] bg-white p-6 shadow-[0_35px_90px_rgba(0,0,0,.28)] sm:p-8">
             <div><span className="text-xs font-black text-brand">انضم مجانًا</span><h2 className="mt-2 font-heading text-3xl font-black text-navy">إنشاء حساب طالب</h2><p className="mt-2 text-sm text-slate-500">املأ البيانات التالية، وبعدها تقدر تشاهد الدروس المجانية فورًا.</p></div>
             {error && <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-center text-xs font-bold text-rose-600">{error}</div>}

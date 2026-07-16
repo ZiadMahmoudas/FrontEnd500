@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartPie, faBookOpen, faCirclePlay, faUsers, faWallet, faComments, faQrcode, faGear } from "@fortawesome/free-solid-svg-icons";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import RoleGuard from "@/components/auth/RoleGuard";
+
+export const metadata: Metadata = {
+  title: "لوحة الإدارة",
+  robots: { index: false, follow: false, noarchive: true },
+};
 
 const mobileNav = [
   ["/admin", "الرئيسية", faChartPie],

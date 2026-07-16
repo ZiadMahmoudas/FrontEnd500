@@ -3,17 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBars, faBookOpen, faCode, faGaugeHigh, faGraduationCap, faHouse, faRightFromBracket, faRightToBracket, faUserPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faBars, faBookOpen, faGaugeHigh, faGraduationCap, faHouse, faInfoCircle, faRightFromBracket, faRightToBracket, faUserPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import BrandLogo from "./BrandLogo";
 import { useAuth } from "./auth/AuthProvider";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "201158870645";
+  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "201110037311";
   const links = [
     { href: "/", label: "الرئيسية", icon: faHouse },
     { href: "/courses", label: "الكورسات", icon: faBookOpen },
+    { href: "/about", label: "عن الأستاذ", icon: faInfoCircle },
     ...(user?.role === "student" ? [{ href: "/dashboard", label: "لوحة الطالب", icon: faGraduationCap }] : []),
     ...(user && user.role !== "student" ? [{ href: "/admin", label: "لوحة الإدارة", icon: faGaugeHigh }] : []),
     ...(!user ? [{ href: "/login", label: "تسجيل الدخول", icon: faRightToBracket }, { href: "/register", label: "إنشاء حساب", icon: faUserPlus }] : []),
@@ -35,8 +37,8 @@ export default function MobileMenu() {
           <aside className="absolute inset-y-0 right-0 flex w-[86%] max-w-sm flex-col bg-white p-5 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-5">
               <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400 text-white"><FontAwesomeIcon icon={faCode} /></span>
-                <span className="font-heading text-lg font-black text-navy">كود<span className="text-brand">باث</span></span>
+                <BrandLogo size={48} priority />
+                <div><span className="block font-heading text-lg font-black text-navy">المهاجر</span><span className="text-[10px] font-bold text-amber-600">الثواني الأخيرة</span></div>
               </Link>
               <button aria-label="إغلاق" onClick={() => setOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-navy"><FontAwesomeIcon icon={faXmark} /></button>
             </div>

@@ -1,4 +1,4 @@
-const DEFAULT_API_URL = "http://127.0.0.1:5188/api";
+const DEFAULT_API_URL = "https://lmslearning.runasp.net/api";
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL).replace(/\/$/, "");
 const TOKEN_KEY = "codepath_token";
@@ -41,7 +41,7 @@ export function clearToken(): void {
 
 function networkError(): ApiError {
   return new ApiError(
-    "تعذر الاتصال بخادم المنصة. تأكد من اتصال الإنترنت ثم أعد المحاولة.",
+    `تعذر الاتصال بخادم منصة المهاجر (${API_URL}). تأكد أن الرابط ينتهي بـ /api وأن HTTPS وCORS مفعّلان في ASP.NET Core، ثم أعد المحاولة.`,
     0,
   );
 }

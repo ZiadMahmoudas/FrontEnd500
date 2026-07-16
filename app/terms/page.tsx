@@ -1,0 +1,5 @@
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+export const metadata: Metadata = { title: "شروط الاستخدام", description: "شروط استخدام منصة المهاجر التعليمية.", alternates: { canonical: "/terms" } };
+export default function TermsPage() { const items=["الحساب شخصي ولا يجوز مشاركة بيانات الدخول أو المحتوى المدفوع مع الآخرين.","الوصول إلى الكورس مرتبط بحالة الاشتراك، وقد يتم إيقاف الحساب عند إساءة الاستخدام أو محاولة نشر المحتوى.","لا يجوز إعادة رفع الفيديوهات أو الملازم أو بيعها أو توزيعها دون إذن كتابي.","تحتفظ المنصة بحق تحديث المحتوى والخطط والأسعار مع عدم التأثير على الاشتراكات المفعلة إلا عند توضيح ذلك."]; return <div className="min-h-screen bg-bg"><Navbar /><main className="container-app max-w-4xl py-16"><h1 className="font-heading text-4xl font-black text-navy">شروط الاستخدام</h1><div className="mt-8 space-y-4 rounded-[28px] bg-white p-7 shadow-sm">{items.map((item)=><p key={item} className="leading-8 text-slate-600">{item}</p>)}</div></main><Footer /></div>; }

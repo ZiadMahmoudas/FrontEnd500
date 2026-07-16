@@ -9,7 +9,7 @@ import { getAdminSettings, updateAdminSettings, type AdminPlatformSettings } fro
 import { ApiError } from "@/lib/api/client";
 
 const empty: AdminPlatformSettings = {
-  platform_name: "كودباث",
+  platform_name: "المهاجر",
   instructor_name: "عمر",
   support_email: "",
   vodafone_cash_number: "01158870645",

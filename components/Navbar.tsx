@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faCode, faGaugeHigh, faGraduationCap, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faGaugeHigh, faGraduationCap, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 import MobileMenu from "./MobileMenu";
+import BrandLogo from "./BrandLogo";
 import { useAuth } from "./auth/AuthProvider";
 
 const publicLinks = [
   { href: "/", label: "الرئيسية" },
   { href: "/courses", label: "الكورسات" },
+  { href: "/about", label: "عن الأستاذ" },
   { href: "/#faq", label: "الأسئلة الشائعة" },
 ];
 
@@ -22,14 +24,12 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
-      <div className="container-app flex h-[74px] items-center justify-between">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400 text-white shadow-[0_10px_28px_rgba(37,99,235,.25)]">
-            <FontAwesomeIcon icon={faCode} className="h-5 w-5" />
-          </span>
+      <div className="container-app flex h-[78px] items-center justify-between">
+        <Link href="/" aria-label="منصة المهاجر" className="flex shrink-0 items-center gap-3">
+          <BrandLogo size={52} priority />
           <div>
-            <span className="block font-heading text-xl font-black leading-none text-navy">كود<span className="text-brand">باث</span></span>
-            <span className="mt-1 block text-[9px] font-bold tracking-wide text-slate-400">اتعلم • طبّق • اتطور</span>
+            <span className="block font-heading text-xl font-black leading-none text-navy">المهاجر</span>
+            <span className="mt-1 block text-[9px] font-bold tracking-wide text-slate-400">الثواني الأخيرة • حاسب آلي وبرمجة</span>
           </div>
         </Link>
 

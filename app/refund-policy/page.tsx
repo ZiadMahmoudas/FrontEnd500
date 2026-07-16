@@ -1,0 +1,5 @@
+import type { Metadata } from "next";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+export const metadata: Metadata = { title: "سياسة الاسترجاع", description: "سياسة استرجاع المدفوعات في منصة المهاجر.", alternates: { canonical: "/refund-policy" } };
+export default function RefundPolicyPage() { const items=["يجب التواصل مع الإدارة فور حدوث تحويل خاطئ أو تكرار عملية الدفع مع إرسال رقم العملية والإيصال.","تراجع طلبات الاسترجاع وفق حالة تفعيل الكورس واستهلاك المحتوى وطريقة الدفع المستخدمة.","قد تستغرق التحويلات المرتجعة مدة تختلف حسب فودافون كاش أو InstaPay أو PayPal.","لا يتم اعتماد أي طلب استرجاع دون التحقق من صاحب العملية وبيانات الحساب."]; return <div className="min-h-screen bg-bg"><Navbar /><main className="container-app max-w-4xl py-16"><h1 className="font-heading text-4xl font-black text-navy">سياسة الاسترجاع</h1><div className="mt-8 space-y-4 rounded-[28px] bg-white p-7 shadow-sm">{items.map((item)=><p key={item} className="leading-8 text-slate-600">{item}</p>)}</div></main><Footer /></div>; }

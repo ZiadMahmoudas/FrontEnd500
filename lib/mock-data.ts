@@ -190,9 +190,9 @@ export const payments: Payment[] = [
 ];
 
 export const qrCodes: QRCode[] = [
-  { id: "q-1", targetType: "course", targetTitle: "أساسيات البرمجة بلغة بايثون", targetId: "1", link: "https://codepath.example.com/qr/QR-C1X92", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://codepath.example.com/qr/QR-C1X92&color=0F172A&bgcolor=F8FAFC", scans: 214, createdAt: "2026-06-28" },
-  { id: "q-2", targetType: "lesson", targetTitle: "الجمل الشرطية if / else", targetId: "4", link: "https://codepath.example.com/qr/QR-L4Y41", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://codepath.example.com/qr/QR-L4Y41&color=0F172A&bgcolor=F8FAFC", scans: 88, createdAt: "2026-07-01" },
-  { id: "q-3", targetType: "pdf", targetTitle: "ملزمة الوحدة الأولى PDF", targetId: "1", link: "https://codepath.example.com/qr/QR-P1Z10", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://codepath.example.com/qr/QR-P1Z10&color=0F172A&bgcolor=F8FAFC", scans: 47, createdAt: "2026-07-05" },
+  { id: "q-1", targetType: "course", targetTitle: "أساسيات البرمجة بلغة بايثون", targetId: "1", link: "https://elmohager.example.com/qr/QR-C1X92", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://elmohager.example.com/qr/QR-C1X92&color=0F172A&bgcolor=F8FAFC", scans: 214, createdAt: "2026-06-28" },
+  { id: "q-2", targetType: "lesson", targetTitle: "الجمل الشرطية if / else", targetId: "4", link: "https://elmohager.example.com/qr/QR-L4Y41", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://elmohager.example.com/qr/QR-L4Y41&color=0F172A&bgcolor=F8FAFC", scans: 88, createdAt: "2026-07-01" },
+  { id: "q-3", targetType: "pdf", targetTitle: "ملزمة الوحدة الأولى PDF", targetId: "1", link: "https://elmohager.example.com/qr/QR-P1Z10", imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://elmohager.example.com/qr/QR-P1Z10&color=0F172A&bgcolor=F8FAFC", scans: 47, createdAt: "2026-07-05" },
 ];
 
 export const platformStats = {
