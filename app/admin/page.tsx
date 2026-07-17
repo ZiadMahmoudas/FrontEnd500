@@ -51,7 +51,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="flex flex-col gap-7">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="mb-2 text-xs font-black text-brand">أهلًا، {user?.name || "عمر"}</p><h1 className="font-heading text-2xl font-black text-navy md:text-3xl">لوحة قيادة المنصة</h1><p className="mt-2 text-sm text-slate-500">أرقام حقيقية من قاعدة البيانات، وليست بيانات تجريبية داخل الواجهة.</p></div>
+        <div><p className="mb-2 text-xs font-black text-brand">أهلًا، {user?.name || "مدير المنصة"}</p><h1 className="font-heading text-2xl font-black text-navy md:text-3xl">لوحة قيادة المنصة</h1><p className="mt-2 text-sm text-slate-500">أرقام حقيقية من قاعدة البيانات، وليست بيانات تجريبية داخل الواجهة.</p></div>
         <div className="flex flex-wrap gap-2"><Link href="/admin/payments" className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-black text-navy"><FontAwesomeIcon icon={faFileExcel} className="text-emerald-600" /> المدفوعات وExcel</Link><Link href="/admin/lessons" className="inline-flex items-center gap-2 rounded-2xl bg-navy px-4 py-3 text-xs font-black text-white"><FontAwesomeIcon icon={faPlus} /> إضافة درس</Link></div>
       </section>
 

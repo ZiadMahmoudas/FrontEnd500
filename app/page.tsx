@@ -27,19 +27,33 @@ import Footer from "@/components/Footer";
 import CourseCard from "@/components/CourseCard";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BrandIcon from "@/components/ui/BrandIcon";
-import { courses, platformStats, testimonials, faqs } from "@/lib/mock-data";
-import { formatNumber } from "@/lib/utils";
+import type { Course } from "@/lib/types";
 import JsonLd from "@/components/JsonLd";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
 
-const heroStudents = [
-  "photo-1500648767791-00dcc994a43e",
-  "photo-1544005313-94ddf0286df2",
-  "photo-1519085360753-af0119f7cbe7",
-  "photo-1492562080023-ab3db95bfbce",
+const faqs = [
+  { id: "account", question: "هل إنشاء الحساب مجاني؟", answer: "نعم، إنشاء الحساب مجاني، ويمكن للطالب مشاهدة أي درس معلّم كمجاني قبل الاشتراك." },
+  { id: "payment", question: "كيف يتم تفعيل الكورس؟", answer: "يمكن التفعيل بعد مراجعة تحويل فودافون كاش أو InstaPay، أو تلقائيًا عند تفعيل PayPal." },
+  { id: "content", question: "هل الملازم والفيديوهات متاحة بعد الاشتراك؟", answer: "نعم، تظهر الفيديوهات والملازم داخل حساب الطالب وفق صلاحية الاشتراك وحالة الدرس." },
+  { id: "support", question: "ماذا أفعل إذا واجهت مشكلة؟", answer: "تواصل مع الدعم على واتساب من داخل المنصة وسيتم مراجعة الحساب أو عملية الدفع." },
 ];
 
-export default function HomePage() {
+async function getFeaturedCourses(): Promise<Course[]> {
+  const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "https://lmslearning.runasp.net/api").replace(/\/$/, "");
+  try {
+    const response = await fetch(`${apiUrl}/courses`, { next: { revalidate: 300 }, headers: { Accept: "application/json" }, signal: AbortSignal.timeout(5000) });
+    if (!response.ok) return [];
+    const payload = await response.json();
+    return Array.isArray(payload?.courses) ? payload.courses : [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const courses = await getFeaturedCourses();
+  const publishedCourses = courses.filter((course) => course.status === "published");
+  const totalLessons = publishedCourses.reduce((sum, course) => sum + Number(course.lessonsCount || 0), 0);
   return (
     <div className="min-h-screen overflow-hidden bg-white">
       <Navbar />
@@ -108,17 +122,17 @@ export default function HomePage() {
                 <FontAwesomeIcon icon={faCirclePlay} className="h-4 w-4 text-cyan-300" /> شاهد كيف تعمل المنصة
               </Link>
             </div>
-            <div className="mt-9 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:gap-6">
-              <div className="flex -space-x-3 space-x-reverse">
-                {heroStudents.map((id) => (
-                  <Image key={id} src={`https://images.unsplash.com/${id}?auto=format&fit=crop&w=120&q=80`} alt="طالب على المنصة" width={44} height={44} className="h-11 w-11 rounded-full border-2 border-[#07111f] object-cover" />
-                ))}
-                <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#07111f] bg-cyan-300 text-[10px] font-black text-navy">+12K</span>
-              </div>
-              <div>
-                <div className="flex gap-1 text-amber-300">{Array.from({ length: 5 }).map((_, i) => <FontAwesomeIcon key={i} icon={faStar} className="h-3 w-3" />)}</div>
-                <p className="mt-1 text-xs text-slate-400">طلاب الثانوية يبدأون رحلتهم مع المهاجر</p>
-              </div>
+            <div className="mt-9 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-3">
+              {[
+                [faCheck, "دروس مرتبة"],
+                [faFilePdf, "ملازم داخل الحساب"],
+                [faShieldHalved, "وصول حسب الاشتراك"],
+              ].map(([icon, label]) => (
+                <div key={label as string} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[.04] px-3 py-3 text-xs font-black text-slate-200">
+                  <FontAwesomeIcon icon={icon as any} className="h-3.5 w-3.5 text-cyan-300" />
+                  {label as string}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -156,15 +170,15 @@ export default function HomePage() {
 
       <section className="relative z-10 -mt-8">
         <div className="container-app grid grid-cols-2 gap-3 rounded-[28px] border border-slate-100 bg-white p-4 shadow-[0_25px_70px_rgba(15,23,42,.12)] md:grid-cols-4 md:p-6">
-          {([
-            [faUsers, platformStats.studentsCount, "طالب وطالبة"],
-            [faCirclePlay, platformStats.lessonsCount, "درس منظم"],
-            [faFilePdf, platformStats.pdfCount, "ملزمة ومراجعة"],
-            [faStar, `${platformStats.satisfactionRate}%`, "رضا الطلاب"],
-          ] as const).map(([icon, value, label], index) => (
+          {[
+            [faBookOpen, publishedCourses.length, "كورس منشور"],
+            [faCirclePlay, totalLessons, "درس متاح"],
+            [faFilePdf, "PDF", "ملازم منظمة"],
+            [faHeadset, "واتساب", "دعم مباشر"],
+          ].map(([icon, value, label], index) => (
             <div key={label as string} className={`flex items-center gap-3 p-2 md:px-5 ${index !== 3 ? "md:border-l md:border-slate-100" : ""}`}>
-              <BrandIcon icon={icon as any} tone={index === 3 ? "warning" : "brand"} className="h-10 w-10 rounded-xl" />
-              <div><p className="font-heading text-xl font-black text-navy md:text-2xl">{typeof value === "number" ? formatNumber(value) : value}</p><p className="text-[11px] text-slate-400">{label as string}</p></div>
+              <BrandIcon icon={icon as any} tone={index === 3 ? "success" : "brand"} className="h-10 w-10 rounded-xl" />
+              <div><p className="font-heading text-xl font-black text-navy md:text-2xl">{value as any}</p><p className="text-[11px] text-slate-400">{label as string}</p></div>
             </div>
           ))}
         </div>
@@ -180,7 +194,15 @@ export default function HomePage() {
             </div>
             <Link href="/courses" className="inline-flex items-center gap-2 text-sm font-black text-brand">عرض جميع الكورسات <FontAwesomeIcon icon={faArrowLeft} /></Link>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{courses.slice(0, 3).map((course) => <CourseCard key={course.id} course={course} />)}</div>
+          {courses.length ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{courses.slice(0, 3).map((course) => <CourseCard key={course.id} course={course} />)}</div>
+          ) : (
+            <div className="rounded-[28px] border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+              <FontAwesomeIcon icon={faBookOpen} className="text-4xl text-slate-300" />
+              <h3 className="mt-4 font-heading text-xl font-black text-navy">الكورسات هتظهر هنا فور إنشائها</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-500">ابدأ من لوحة الإدارة بإنشاء أول كورس ونشره، وسيتحدث الموقع تلقائيًا بدون بيانات تجريبية.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -238,18 +260,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#07111f] py-24 text-white">
-        <div className="container-app">
-          <div className="text-center"><span className="text-xs font-black text-cyan-300">تجارب حقيقية</span><h2 className="mt-3 font-heading text-3xl font-black md:text-4xl">طلاب فهموا البرمجة بدل ما يحفظوها</h2></div>
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {testimonials.map((item) => (
-              <article key={item.id} className="rounded-[26px] border border-white/10 bg-white/[.05] p-6 backdrop-blur">
-                <div className="flex gap-1 text-amber-300">{Array.from({ length: item.rating }).map((_, i) => <FontAwesomeIcon key={i} icon={faStar} className="h-3.5 w-3.5" />)}</div>
-                <p className="mt-5 text-sm leading-8 text-slate-300">“{item.content}”</p>
-                <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-5"><Image src={item.avatar} alt={item.name} width={46} height={46} className="h-12 w-12 rounded-2xl object-cover" /><div><p className="text-sm font-black">{item.name}</p><p className="text-[11px] text-slate-500">{item.grade}</p></div></div>
-              </article>
-            ))}
+      <section className="bg-[#07111f] py-20 text-white">
+        <div className="container-app grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <span className="text-xs font-black text-cyan-300">تقييمات موثوقة</span>
+            <h2 className="mt-3 font-heading text-3xl font-black md:text-4xl">آراء الطلاب تظهر من الاشتراكات الحقيقية فقط</h2>
+            <p className="mt-4 max-w-3xl text-sm leading-8 text-slate-300">بعد اشتراك الطالب في الكورس يقدر يكتب تقييمًا وتعليقًا ويرفع صورة اختيارية، والأدمن يقدر ينشر التقييم أو يرد عليه أو يحذفه من لوحة الإدارة.</p>
           </div>
+          <Link href="/courses" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-sm font-black text-navy">استعرض الكورسات <FontAwesomeIcon icon={faArrowLeft} /></Link>
         </div>
       </section>
 

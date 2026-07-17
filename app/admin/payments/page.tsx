@@ -12,12 +12,14 @@ import {
   faMoneyBillTransfer,
   faReceipt,
   faRotate,
+  faTrashCan,
   faWallet,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import StatusBadge from "@/components/StatusBadge";
 import BrandIcon from "@/components/ui/BrandIcon";
 import {
+  deleteAdminPayment,
   downloadPaymentProof,
   exportPayments,
   getAdminPayments,
@@ -108,6 +110,23 @@ export default function AdminPaymentsPage() {
     }
   }
 
+
+  async function removePayment(payment: AdminPayment) {
+    const typed = window.prompt(`سيتم حذف عملية ${payment.order_code} والإيصال والاشتراك المرتبط بها.\nاكتب كود الطلب للتأكيد:`);
+    if (typed !== payment.order_code) return;
+    setActionId(payment.id);
+    setError("");
+    try {
+      const response = await deleteAdminPayment(payment.id);
+      setMessage(response.message);
+      await load();
+    } catch (reason) {
+      setError(reason instanceof ApiError ? reason.message : "تعذر حذف عملية الدفع.");
+    } finally {
+      setActionId(null);
+    }
+  }
+
   async function exportFile() {
     setExporting(true);
     setError("");
@@ -181,6 +200,7 @@ export default function AdminPaymentsPage() {
                   {payment.proof_path && <button onClick={() => downloadPaymentProof(payment.id)} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-black text-navy"><FontAwesomeIcon icon={faReceipt} /> تنزيل الإيصال</button>}
                   <button onClick={() => decide(payment, "approved")} disabled={actionId === payment.id} className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-black text-white disabled:opacity-60"><FontAwesomeIcon icon={faCheck} /> اعتماد وتفعيل الكورس</button>
                   <button onClick={() => decide(payment, "rejected")} disabled={actionId === payment.id} className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200 px-4 py-2.5 text-xs font-black text-rose-600 disabled:opacity-60"><FontAwesomeIcon icon={faXmark} /> رفض</button>
+                  <button title="حذف نهائي" onClick={() => removePayment(payment)} disabled={actionId === payment.id} className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-black text-rose-700 disabled:opacity-60"><FontAwesomeIcon icon={faTrashCan} /> حذف</button>
                 </div>
               </article>
             ))}
@@ -204,7 +224,7 @@ export default function AdminPaymentsPage() {
                 <td className="px-4 py-4 font-mono text-slate-500">{payment.transaction_id || payment.provider_capture_id || "—"}</td>
                 <td className="px-4 py-4"><StatusBadge label={statusLabels[payment.status]} tone={statusTone(payment.status)} /></td>
                 <td className="px-4 py-4 whitespace-nowrap text-slate-500">{dateTime(payment.created_at)}</td>
-                <td className="px-4 py-4">{payment.proof_path ? <button onClick={() => downloadPaymentProof(payment.id)} className="rounded-lg border border-slate-200 px-3 py-2 font-black text-navy">الإيصال</button> : <span className="text-slate-300">—</span>}</td>
+                <td className="px-4 py-4"><div className="flex items-center gap-2">{payment.proof_path ? <button onClick={() => downloadPaymentProof(payment.id)} className="rounded-lg border border-slate-200 px-3 py-2 font-black text-navy">الإيصال</button> : null}<button title="حذف نهائي" onClick={() => removePayment(payment)} className="flex h-9 w-9 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-600"><FontAwesomeIcon icon={faTrashCan} /></button></div></td>
               </tr>
             ))}</tbody>
           </table>

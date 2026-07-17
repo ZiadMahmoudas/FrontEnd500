@@ -1,27 +1,34 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/site-config";
+import { siteConfig } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
+  const privatePaths = [
+    "/admin/",
+    "/dashboard/",
+    "/login",
+    "/register",
+    "/checkout/",
+    "/payment-proof",
+    "/lessons/",
+    "/qr/",
+    "/system-status",
+    "/api/",
+  ];
+
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/courses", "/courses/", "/about", "/contact", "/privacy", "/terms", "/refund-policy"],
-        disallow: [
-          "/admin",
-          "/dashboard",
-          "/login",
-          "/register",
-          "/checkout",
-          "/payment-proof",
-          "/lessons",
-          "/qr",
-          "/api",
-          "/system-status",
-        ],
+        allow: "/",
+        disallow: privatePaths,
+      },
+      {
+        userAgent: "Googlebot",
+        allow: ["/", "/_next/static/", "/_next/image/"],
+        disallow: privatePaths,
       },
     ],
-    sitemap: absoluteUrl("/sitemap.xml"),
-    host: absoluteUrl("/"),
+    sitemap: `${siteConfig.siteUrl}/sitemap.xml`,
+    host: siteConfig.siteUrl,
   };
 }

@@ -31,7 +31,7 @@ type FormState = {
   thumbnail_source: "url" | "upload"; thumbnail_url: string;
 };
 
-const defaultThumbnail = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1000&q=85";
+const defaultThumbnail = "/brand/cover.png";
 const emptyForm: FormState = {
   course_id: "", unit_id: "", title: "", description: "", duration_minutes: "0", sort_order: "1", is_free: false, status: "draft",
   video_source: "none", video_url: "", pdf_source: "none", pdf_url: "", thumbnail_source: "url", thumbnail_url: defaultThumbnail,

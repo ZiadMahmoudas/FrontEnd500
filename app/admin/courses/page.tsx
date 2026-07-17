@@ -2,12 +2,12 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArchive, faBookOpen, faCirclePlus, faCloudArrowUp, faFloppyDisk, faImage, faLink, faMagnifyingGlass, faPenToSquare, faRotate, faSpinner, faStar, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faBookOpen, faCirclePlus, faCloudArrowUp, faFloppyDisk, faImage, faLink, faMagnifyingGlass, faPenToSquare, faRotate, faSpinner, faStar, faTrashCan, faXmark } from "@fortawesome/free-solid-svg-icons";
 import AdminModal from "@/components/admin/AdminModal";
 import AdminAlert from "@/components/admin/AdminAlert";
 import ChunkFileUploader from "@/components/admin/ChunkFileUploader";
 import StatusBadge from "@/components/StatusBadge";
-import { archiveAdminCourse, createAdminCourse, getAdminCourses, updateAdminCourse, type AdminCourse, type CoursePayload } from "@/lib/api/admin";
+import { archiveAdminCourse, createAdminCourse, deleteAdminCoursePermanently, getAdminCourses, updateAdminCourse, type AdminCourse, type CoursePayload } from "@/lib/api/admin";
 import { ApiError } from "@/lib/api/client";
 import type { CompletedUpload } from "@/lib/api/uploads";
 import type { CourseStatus, Grade } from "@/lib/types";
@@ -18,7 +18,7 @@ const statuses: Array<{ value: CourseStatus; label: string }> = [
   { value: "published", label: "منشور" }, { value: "draft", label: "مسودة" }, { value: "coming_soon", label: "قريبًا" }, { value: "archived", label: "مؤرشف" },
 ];
 
-const defaultImage = "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1200&q=85";
+const defaultImage = "/brand/cover.png";
 const emptyForm: CoursePayload = {
   slug: "", title: "", short_description: "", description: "", image_url: defaultImage, image_source: "url",
   grade: "الثالث الثانوي", price: 0, paypal_price: 0, status: "draft", is_new: true, tags: [],
@@ -101,6 +101,18 @@ export default function AdminCoursesPage() {
     catch (reason) { setError(reason instanceof ApiError ? reason.message : "تعذر أرشفة الكورس."); }
   }
 
+  async function removePermanently(course: AdminCourse) {
+    const typed = window.prompt(`سيتم حذف «${course.title}» ودروسه وملفاته واشتراكاته ومدفوعاته نهائيًا.\nاكتب اسم الكورس للتأكيد:`);
+    if (typed !== course.title) return;
+    try {
+      const response = await deleteAdminCoursePermanently(course.id);
+      setSuccess(response.message);
+      await load();
+    } catch (reason) {
+      setError(reason instanceof ApiError ? reason.message : "تعذر حذف الكورس نهائيًا.");
+    }
+  }
+
   const preview = imageUpload?.url || (form.image_source === "upload" ? editing?.display_image_url : form.image_url) || defaultImage;
 
   return (
@@ -119,7 +131,7 @@ export default function AdminCoursesPage() {
 
       {loading ? <div className="flex min-h-72 items-center justify-center rounded-[28px] bg-white text-sm font-bold text-slate-400"><FontAwesomeIcon icon={faSpinner} spin className="ml-2 text-brand" /> جاري التحميل...</div> : filtered.length === 0 ? <div className="rounded-[28px] border border-dashed border-slate-300 bg-white p-12 text-center"><FontAwesomeIcon icon={faBookOpen} className="text-4xl text-slate-300" /><p className="mt-4 text-sm font-black text-navy">لا توجد كورسات مطابقة.</p></div> : (
         <section className="overflow-hidden rounded-[28px] border border-white bg-white shadow-sm"><div className="overflow-x-auto"><table className="w-full min-w-[980px] text-right text-sm"><thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="p-4">الكورس</th><th className="p-4">الصف</th><th className="p-4">السعر</th><th className="p-4">الدروس</th><th className="p-4">التقييمات</th><th className="p-4">الحالة</th><th className="p-4">إجراءات</th></tr></thead><tbody className="divide-y divide-slate-100">{filtered.map((course) => (
-          <tr key={course.id} className="hover:bg-slate-50/70"><td className="p-4"><div className="flex items-center gap-3"><img src={course.display_image_url || course.image_url} alt={course.title} className="h-14 w-20 rounded-2xl object-cover" /><div className="min-w-0"><p className="max-w-[280px] truncate font-black text-navy">{course.title}</p><p className="mt-1 font-mono text-[10px] text-slate-400">/{course.slug}</p></div></div></td><td className="p-4 text-xs font-bold text-slate-600">{course.grade}</td><td className="p-4"><strong>{formatPrice(Number(course.price))}</strong><p className="mt-1 text-[10px] text-slate-400">PayPal ${Number(course.paypal_price).toFixed(2)}</p></td><td className="p-4 font-mono font-black">{course.lessons_count}</td><td className="p-4"><span className="inline-flex items-center gap-1 font-black text-amber-500"><FontAwesomeIcon icon={faStar} /> {Number(course.rating).toFixed(1)}</span><p className="mt-1 text-[10px] text-slate-400">{course.reviews_count || 0} تعليق</p></td><td className="p-4">{badge(course.status)}</td><td className="p-4"><div className="flex gap-2"><button onClick={() => openEdit(course)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-100 text-blue-600"><FontAwesomeIcon icon={faPenToSquare} /></button><button onClick={() => archive(course)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-100 text-rose-600"><FontAwesomeIcon icon={faArchive} /></button></div></td></tr>
+          <tr key={course.id} className="hover:bg-slate-50/70"><td className="p-4"><div className="flex items-center gap-3"><img src={course.display_image_url || course.image_url} alt={course.title} className="h-14 w-20 rounded-2xl object-cover" /><div className="min-w-0"><p className="max-w-[280px] truncate font-black text-navy">{course.title}</p><p className="mt-1 font-mono text-[10px] text-slate-400">/{course.slug}</p></div></div></td><td className="p-4 text-xs font-bold text-slate-600">{course.grade}</td><td className="p-4"><strong>{formatPrice(Number(course.price))}</strong><p className="mt-1 text-[10px] text-slate-400">PayPal ${Number(course.paypal_price).toFixed(2)}</p></td><td className="p-4 font-mono font-black">{course.lessons_count}</td><td className="p-4"><span className="inline-flex items-center gap-1 font-black text-amber-500"><FontAwesomeIcon icon={faStar} /> {Number(course.rating).toFixed(1)}</span><p className="mt-1 text-[10px] text-slate-400">{course.reviews_count || 0} تعليق</p></td><td className="p-4">{badge(course.status)}</td><td className="p-4"><div className="flex gap-2"><button onClick={() => openEdit(course)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-100 text-blue-600"><FontAwesomeIcon icon={faPenToSquare} /></button><button title="أرشفة" onClick={() => archive(course)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-100 text-amber-600"><FontAwesomeIcon icon={faArchive} /></button><button title="حذف نهائي" onClick={() => removePermanently(course)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-600"><FontAwesomeIcon icon={faTrashCan} /></button></div></td></tr>
         ))}</tbody></table></div></section>
       )}
 

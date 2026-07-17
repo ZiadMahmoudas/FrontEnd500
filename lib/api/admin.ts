@@ -324,3 +324,54 @@ export async function updateAdminReview(id: number, payload: { status: "pending"
 export async function deleteAdminReview(id: number) {
   return apiFetch<{ success: true; message: string }>(`/admin/reviews/${id}`, { method: "DELETE" });
 }
+
+export interface AdminSubscription {
+  id: number;
+  course_id: number;
+  course_title: string;
+  status: string;
+  method: PaymentMethod;
+  payment_id?: number | null;
+  activated_at?: string | null;
+  expires_at?: string | null;
+  created_at: string;
+}
+
+export async function deleteAdminCoursePermanently(id: number) {
+  return apiFetch<{ success: true; message: string }>(`/admin/courses/${id}/permanent`, { method: "DELETE" });
+}
+
+export async function deleteAdminStudent(id: number) {
+  return apiFetch<{ success: true; message: string }>(`/admin/students/${id}`, { method: "DELETE" });
+}
+
+export async function getAdminStudentSubscriptions(id: number) {
+  return apiFetch<{ success: true; subscriptions: AdminSubscription[] }>(`/admin/students/${id}/subscriptions`);
+}
+
+export async function deleteAdminSubscription(id: number) {
+  return apiFetch<{ success: true; message: string }>(`/admin/subscriptions/${id}`, { method: "DELETE" });
+}
+
+export async function deleteAdminPayment(id: number) {
+  return apiFetch<{ success: true; message: string }>(`/admin/payments/${id}`, { method: "DELETE" });
+}
+
+export async function getMaintenanceSummary() {
+  return apiFetch<{ success: true; demo: { courses: number; students: number }; content?: { courses: number; lessons: number; students: number; payments: number; subscriptions: number } }>("/admin/maintenance/summary");
+}
+
+export async function cleanupDemoData(confirmation: string) {
+  return apiFetch<{ success: true; message: string; removed_courses: number; removed_students: number }>("/admin/maintenance/cleanup-demo", {
+    method: "POST",
+    body: JSON.stringify({ confirmation }),
+  });
+}
+
+
+export async function clearPlatformContent(confirmation: string) {
+  return apiFetch<{ success: true; message: string; removed_students: number }>("/admin/maintenance/clear-content", {
+    method: "POST",
+    body: JSON.stringify({ confirmation }),
+  });
+}
