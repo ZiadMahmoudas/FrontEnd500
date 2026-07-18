@@ -92,3 +92,10 @@ select:focus-visible {
     @apply h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-navy outline-none transition placeholder:text-slate-400 focus:border-brand/40 focus:bg-white focus:ring-4 focus:ring-brand/5;
   }
 }
+
+/* Bilingual direction and typography */
+html[dir="ltr"] body { font-family: Inter, Arial, sans-serif; }
+html[dir="ltr"] .font-heading { font-family: Inter, Arial, sans-serif !important; }
+html[dir="ltr"] .admin-sidebar { border-left-width: 0; border-right-width: 1px; }
+html[dir="ltr"] input, html[dir="ltr"] textarea, html[dir="ltr"] select { text-align: left; }
+html[dir="rtl"] input, html[dir="rtl"] textarea, html[dir="rtl"] select { text-align: right; }

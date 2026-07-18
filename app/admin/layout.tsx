@@ -5,6 +5,7 @@ import { faChartPie, faBookOpen, faCirclePlay, faUsers, faWallet, faComments, fa
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import RoleGuard from "@/components/auth/RoleGuard";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 export const metadata: Metadata = {
   title: "لوحة الإدارة",
@@ -30,6 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-w-0 flex-1">
         <AdminTopbar />
         <div className="sticky top-0 z-40 flex items-center gap-2 overflow-x-auto border-b border-slate-200 bg-white/95 p-3 backdrop-blur lg:hidden">
+          <LanguageSwitcher compact />
           {mobileNav.map(([href, label, icon]) => (
             <Link key={href} href={href} className="flex shrink-0 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-navy shadow-sm">
               <FontAwesomeIcon icon={icon} className="h-3.5 w-3.5 text-brand" /> {label}

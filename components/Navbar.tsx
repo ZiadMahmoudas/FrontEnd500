@@ -6,6 +6,7 @@ import { faArrowLeft, faGaugeHigh, faGraduationCap, faRightFromBracket, faUser }
 import MobileMenu from "./MobileMenu";
 import BrandLogo from "./BrandLogo";
 import { useAuth } from "./auth/AuthProvider";
+import LanguageSwitcher from "./i18n/LanguageSwitcher";
 
 const publicLinks = [
   { href: "/", label: "الرئيسية" },
@@ -43,6 +44,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <LanguageSwitcher compact />
           {loading ? <span className="h-10 w-28 animate-pulse rounded-xl bg-slate-100" /> : !user ? (
             <>
               <Link href="/login" className="rounded-xl px-4 py-2.5 text-sm font-black text-navy transition hover:bg-slate-50">تسجيل الدخول</Link>

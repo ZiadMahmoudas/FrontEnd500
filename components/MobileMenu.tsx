@@ -21,12 +21,16 @@ import {
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import BrandLogo from "./BrandLogo";
 import { useAuth } from "./auth/AuthProvider";
+import LanguageSwitcher from "./i18n/LanguageSwitcher";
+import { useLanguage } from "./i18n/LanguageProvider";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const normalizedPathname = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
   const { user, signOut } = useAuth();
+  const { isEnglish } = useLanguage();
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "201110037311";
 
   const links = useMemo(() => [
@@ -105,7 +109,7 @@ export default function MobileMenu() {
           role="dialog"
           aria-modal="true"
           aria-label="قائمة التنقل"
-          className={`absolute inset-y-0 right-0 flex w-[min(90vw,390px)] flex-col overflow-y-auto bg-white shadow-[-24px_0_70px_rgba(2,7,19,.28)] transition-transform duration-300 ease-out ${open ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute inset-y-0 flex w-[min(90vw,390px)] flex-col overflow-y-auto bg-white transition-transform duration-300 ease-out ${isEnglish ? "left-0 shadow-[24px_0_70px_rgba(2,7,19,.28)]" : "right-0 shadow-[-24px_0_70px_rgba(2,7,19,.28)]"} ${open ? "translate-x-0" : isEnglish ? "-translate-x-full" : "translate-x-full"}`}
           style={{ paddingTop: "max(1rem, env(safe-area-inset-top))", paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
         >
           <div className="flex items-center justify-between border-b border-slate-100 px-5 pb-5">
@@ -135,7 +139,7 @@ export default function MobileMenu() {
 
           <nav className="mt-4 flex flex-col gap-1.5 px-4">
             {links.map((link) => {
-              const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              const active = link.href === "/" ? normalizedPathname === "/" : normalizedPathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
@@ -170,6 +174,7 @@ export default function MobileMenu() {
           </nav>
 
           <div className="mt-auto space-y-3 border-t border-slate-100 px-5 pt-5">
+            <div className="flex justify-center"><LanguageSwitcher /></div>
             <a
               href={`https://wa.me/${whatsapp}`}
               target="_blank"
