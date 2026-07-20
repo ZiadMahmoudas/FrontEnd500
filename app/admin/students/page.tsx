@@ -179,11 +179,12 @@ export default function AdminStudentsPage() {
         <section className="overflow-hidden rounded-[28px] border border-white bg-white shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1120px] text-right text-sm">
-              <thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="p-4">الطالب</th><th className="p-4">الصف</th><th className="p-4">المحافظة</th><th className="p-4">الاشتراكات</th><th className="p-4">تاريخ التسجيل</th><th className="p-4">الحالة</th><th className="p-4">إجراءات</th></tr></thead>
+              <thead className="bg-slate-50 text-xs text-slate-500"><tr><th className="p-4">الطالب</th><th className="p-4">رقم ولي الأمر</th><th className="p-4">الصف</th><th className="p-4">المحافظة</th><th className="p-4">الاشتراكات</th><th className="p-4">تاريخ التسجيل</th><th className="p-4">الحالة</th><th className="p-4">إجراءات</th></tr></thead>
               <tbody className="divide-y divide-slate-100">
                 {students.map((student) => (
                   <tr key={student.id} className="transition hover:bg-slate-50/70">
                     <td className="p-4"><div className="flex items-center gap-3">{student.avatar_url ? <Image src={student.avatar_url} alt={student.name} width={44} height={44} className="h-11 w-11 rounded-2xl object-cover" /> : <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand/10 font-black text-brand">{student.name.slice(0, 1)}</span>}<div><p className="font-black text-navy">{student.name}</p><p className="mt-1 font-mono text-[10px] text-slate-400">{student.phone}{student.email ? ` • ${student.email}` : ""}</p></div></div></td>
+                    <td className="p-4 font-mono text-xs font-bold text-slate-600">{student.guardian_phone || "—"}</td>
                     <td className="p-4 text-xs font-bold text-slate-600">{student.grade || "—"}</td>
                     <td className="p-4 text-xs font-bold text-slate-600">{student.governorate || "—"}</td>
                     <td className="p-4"><button onClick={() => openSubscriptions(student)} className="inline-flex min-w-10 items-center justify-center gap-2 rounded-xl bg-blue-50 px-3 py-2 font-mono font-black text-blue-700"><FontAwesomeIcon icon={faKey} />{student.subscriptions_count}</button></td>

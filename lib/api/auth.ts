@@ -4,10 +4,13 @@ export interface AuthUser {
   id: number;
   name: string;
   phone: string;
+  guardianPhone?: string;
   email?: string;
   role: "student" | "admin" | "instructor";
   grade?: string;
   governorate?: string;
+  avatarUrl?: string;
+  status?: string;
 }
 
 interface AuthResponse {
@@ -28,6 +31,7 @@ export async function login(payload: { identifier: string; password: string }) {
 export async function register(payload: {
   name: string;
   phone: string;
+  guardianPhone: string;
   email?: string;
   password: string;
   grade: string;
@@ -39,6 +43,29 @@ export async function register(payload: {
   });
   saveToken(response.token);
   return response;
+}
+
+export async function forgotPassword(identifier: string) {
+  return apiFetch<{
+    success: true;
+    requestId?: number;
+    expiresInMinutes?: number;
+    delivery?: "email" | "support";
+    destination?: string;
+    whatsappUrl?: string;
+    debugCode?: string;
+    message: string;
+  }>("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ identifier }),
+  });
+}
+
+export async function resetPassword(payload: { requestId: number; code: string; newPassword: string }) {
+  return apiFetch<{ success: true; message: string }>("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function me() {

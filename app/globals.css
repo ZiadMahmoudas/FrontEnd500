@@ -137,3 +137,60 @@ html[dir="ltr"] [class~="bg-gradient-to-l"] { background-image: linear-gradient(
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Global light / dark theme ------------------------------------------------- */
+:root {
+  --app-bg: #f8fafc;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f1f5f9;
+  --app-text: #0f172a;
+  --app-muted: #64748b;
+  --app-border: #e2e8f0;
+}
+
+html.dark {
+  --app-bg: #020617;
+  --app-surface: #0f172a;
+  --app-surface-soft: #111c31;
+  --app-text: #f8fafc;
+  --app-muted: #94a3b8;
+  --app-border: #24324a;
+}
+
+html.dark body { background: var(--app-bg); color: var(--app-text); }
+html.dark ::-webkit-scrollbar-track { background: #020617; }
+html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+html.dark .card-surface { background: #0f172a; border-color: rgba(148,163,184,.15); box-shadow: 0 18px 45px -24px rgba(0,0,0,.65); }
+html.dark .admin-input { background: #0b1220; border-color: #26364f; color: #f8fafc; }
+html.dark .admin-input:focus { background: #111c31; }
+
+/* Existing screens use utility colors extensively. These guarded overrides
+   provide a coherent dark theme without forcing every page to be rewritten. */
+html.dark [class~="bg-white"] { background-color: #0f172a !important; }
+html.dark [class~="bg-slate-50"] { background-color: #0b1220 !important; }
+html.dark [class~="bg-slate-100"] { background-color: #162238 !important; }
+html.dark [class~="bg-bg"] { background-color: #020617 !important; }
+html.dark [class~="text-navy"] { color: #f8fafc !important; }
+html.dark [class~="text-slate-900"],
+html.dark [class~="text-slate-800"],
+html.dark [class~="text-slate-700"] { color: #e2e8f0 !important; }
+html.dark [class~="text-slate-600"],
+html.dark [class~="text-slate-500"],
+html.dark [class~="text-slate-400"] { color: #94a3b8 !important; }
+html.dark [class~="border-white"],
+html.dark [class~="border-slate-100"],
+html.dark [class~="border-slate-200"] { border-color: #24324a !important; }
+html.dark [class~="divide-slate-100"] > :not([hidden]) ~ :not([hidden]) { border-color: #24324a !important; }
+html.dark input,
+html.dark textarea,
+html.dark select { background-color: #0b1220; border-color: #334155; color: #f8fafc; }
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: #64748b; }
+html.dark option { background: #0f172a; color: #f8fafc; }
+html.dark header[class*="bg-white"] { background-color: rgba(8,15,29,.92) !important; }
+html.dark .shadow-sm,
+html.dark [class*="shadow-[0_10px_35px"] { box-shadow: 0 18px 45px -28px rgba(0,0,0,.8) !important; }
+
+.theme-surface { background: var(--app-surface); color: var(--app-text); border-color: var(--app-border); }
+.theme-soft { background: var(--app-surface-soft); }
+.theme-muted { color: var(--app-muted); }

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightFromBracket, faBookOpen, faChartPie, faCirclePlay, faComments, faGear, faQrcode, faRightFromBracket, faUsers, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket, faBookOpen, faChartPie, faCirclePlay, faComments, faGear, faKey, faQrcode, faRightFromBracket, faUsers, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/AuthProvider";
 import BrandLogo from "@/components/BrandLogo";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 const navItems = [
   { href: "/admin", label: "نظرة عامة", icon: faChartPie },
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/admin/payments", label: "المدفوعات والتقارير", icon: faWallet },
   { href: "/admin/reviews", label: "تقييمات الطلاب", icon: faComments },
   { href: "/admin/qrcodes", label: "رموز QR", icon: faQrcode },
+  { href: "/admin/password-resets", label: "استعادة كلمات المرور", icon: faKey },
   { href: "/admin/settings", label: "إعدادات المنصة", icon: faGear },
 ];
 
@@ -32,7 +34,7 @@ export default function AdminSidebar() {
         <Link href="/" className="mb-8 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3"><BrandLogo size={48} /><div><span className="block font-heading text-lg font-black text-white">المهاجر</span><span className="text-[11px] text-amber-300">مركز إدارة المنصة</span></div></Link>
         <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">القائمة الرئيسية</p>
         <nav className="flex flex-1 flex-col gap-1.5">{navItems.map((item) => { const active = item.href === "/admin" ? normalizedPathname === "/admin" : normalizedPathname.startsWith(item.href); return <Link key={item.href} href={item.href} className={cn("group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition", active ? "bg-gradient-to-l from-brand to-blue-500 text-white shadow-[0_12px_28px_rgba(37,99,235,.24)]" : "text-slate-400 hover:bg-white/[0.06] hover:text-white")}><FontAwesomeIcon icon={item.icon} className={cn("h-4 w-4", active ? "text-white" : "text-slate-500 group-hover:text-cyan-300")} /><span>{item.label}</span></Link>; })}</nav>
-        <div className="space-y-2 border-t border-white/10 pt-4"><div className="mb-2"><LanguageSwitcher dark /></div><Link href="/" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-400 transition hover:bg-white/[0.06] hover:text-white"><FontAwesomeIcon icon={faArrowRightFromBracket} className="h-4 w-4" /> العودة للموقع</Link><button onClick={signOut} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-rose-300 transition hover:bg-rose-500/10"><FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4" /> تسجيل الخروج</button></div>
+        <div className="space-y-2 border-t border-white/10 pt-4"><div className="mb-2 flex items-center gap-2"><ThemeToggle dark /><LanguageSwitcher dark /></div><Link href="/" className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-400 transition hover:bg-white/[0.06] hover:text-white"><FontAwesomeIcon icon={faArrowRightFromBracket} className="h-4 w-4" /> العودة للموقع</Link><button onClick={signOut} className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-rose-300 transition hover:bg-rose-500/10"><FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4" /> تسجيل الخروج</button></div>
       </div>
     </aside>
   );

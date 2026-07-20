@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     "/dashboard/",
     "/login",
     "/register",
+        "/forgot-password",
     "/checkout/",
     "/payment-proof",
     "/lessons/",

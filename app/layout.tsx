@@ -4,11 +4,11 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GoogleTagManagerEvents from "@/components/analytics/GoogleTagManagerEvents";
 import { LanguageProvider } from "@/components/i18n/LanguageProvider";
-import FloatingLanguageSwitcher from "@/components/i18n/FloatingLanguageSwitcher";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
 import { getPreferredLocale } from "@/lib/i18n/server";
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#06162f", colorScheme: "light" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#F8FAFC" }, { media: "(prefers-color-scheme: dark)", color: "#020617" }], colorScheme: "light dark" };
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = `${siteConfig.fullName} | الحاسب الآلي والبرمجة للثانوية العامة`;
@@ -45,19 +45,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} dir={locale === "en" ? "ltr" : "rtl"} className={locale === "en" ? "i18n-booting" : undefined} suppressHydrationWarning>
       <head>
+        <script id="theme-bootstrap" dangerouslySetInnerHTML={{ __html: `(function(){try{var k='elmohager-theme',s=localStorage.getItem(k),d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light';}catch(e){}})();` }} />
         {gtmId ? <script id="google-tag-manager" dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');` }} /> : null}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
       </head>
-      <body suppressHydrationWarning className="font-body bg-bg text-navy antialiased">
+      <body suppressHydrationWarning className="font-body bg-bg text-navy antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
         {gtmId ? <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style={{ display: "none", visibility: "hidden" }} title="Google Tag Manager" /></noscript> : null}
-        <LanguageProvider initialLocale={locale}>
-          <AuthProvider>{children}</AuthProvider>
-          <FloatingLanguageSwitcher />
+        <ThemeProvider>
+          <LanguageProvider initialLocale={locale}>
+            <AuthProvider>{children}</AuthProvider>
           <GoogleTagManagerEvents />
-          <GoogleAnalytics />
-        </LanguageProvider>
+            <GoogleAnalytics />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

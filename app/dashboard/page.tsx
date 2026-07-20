@@ -36,7 +36,7 @@ const links = [
   [faBookOpen, "كورساتي", "#courses"],
   [faCirclePlay, "متابعة المشاهدة", "#continue"],
   [faWallet, "المدفوعات", "#payments"],
-  [faUser, "الحساب", "#profile"],
+  [faUser, "الحساب", "/dashboard/account"],
 ] as const;
 
 const methodLabels: Record<MyPayment["method"], string> = {
@@ -97,7 +97,7 @@ function StudentDashboard() {
           <div className="grid gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
             <aside className="h-fit rounded-[28px] bg-[#07111f] p-4 text-white shadow-[0_22px_60px_rgba(15,23,42,.14)] lg:sticky lg:top-24">
               <div id="profile" className="flex items-center gap-3 border-b border-white/10 p-2 pb-5">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400 text-lg font-black">{(user?.name || "ط").slice(0, 1)}</span>
+                {user?.avatarUrl ? <Image src={user.avatarUrl} alt={user.name} width={48} height={48} className="h-12 w-12 rounded-2xl object-cover" unoptimized /> : <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-cyan-400 text-lg font-black">{(user?.name || "ط").slice(0, 1)}</span>}
                 <div className="min-w-0"><p className="truncate text-sm font-black">{user?.name}</p><p className="mt-1 text-[10px] text-slate-400">{user?.grade || "طالب"}</p></div>
               </div>
               <nav className="mt-4 flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible">{links.map(([icon, label, href], index) => <Link key={label} href={href} className={`flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-xs font-black transition ${index === 0 ? "bg-brand text-white" : "text-slate-400 hover:bg-white/[.06] hover:text-white"}`}><FontAwesomeIcon icon={icon} className="h-3.5 w-3.5" />{label}</Link>)}</nav>

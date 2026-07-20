@@ -132,6 +132,7 @@ export interface AdminStudent {
   id: number;
   name: string;
   phone: string;
+  guardian_phone?: string | null;
   email?: string | null;
   grade?: Grade | null;
   governorate?: string | null;
@@ -374,4 +375,25 @@ export async function clearPlatformContent(confirmation: string) {
     method: "POST",
     body: JSON.stringify({ confirmation }),
   });
+}
+
+export interface AdminPasswordResetRequest {
+  id: number;
+  userId: number;
+  studentName: string;
+  studentPhone: string;
+  guardianPhone?: string | null;
+  code?: string | null;
+  deliveryMethod: string;
+  attempts: number;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export async function getAdminPasswordResets() {
+  return apiFetch<{ success: true; items: AdminPasswordResetRequest[] }>("/admin/password-resets");
+}
+
+export async function closeAdminPasswordReset(id: number) {
+  return apiFetch<{ success: true }>(`/admin/password-resets/${id}`, { method: "DELETE" });
 }
