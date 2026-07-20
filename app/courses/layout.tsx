@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: en ? "Computer Science & Programming Courses" : "كورسات الحاسب الآلي والبرمجة للثانوية العامة",
     description,
-    alternates: { canonical: path, languages: { "ar-EG": "/courses", "en-US": "/en/courses" } },
+    alternates: { canonical: path },
     openGraph: { title: en ? "Elmohager Courses" : "كورسات منصة المهاجر", description, url: path, locale: en ? "en_US" : "ar_EG" },
   };
 }

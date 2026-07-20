@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: en ? "Contact Elmohager Platform" : "تواصل مع منصة المهاجر",
     description: en ? "Contact Elmohager Platform for course, subscription and payment support." : "تواصل مع منصة المهاجر للاستفسار عن كورسات الحاسب الآلي والبرمجة والاشتراكات للثانوية العامة.",
-    alternates: { canonical: path, languages: { "ar-EG": "/contact", "en-US": "/en/contact" } },
+    alternates: { canonical: path },
   };
 }
 

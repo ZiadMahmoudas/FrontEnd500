@@ -20,7 +20,7 @@ const titles: Record<string, { title: string; subtitle: string }> = {
 export default function AdminTopbar() {
   const { user } = useAuth();
   const pathname = usePathname();
-  const normalizedPathname = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const normalizedPathname = pathname || "/";
   const current = titles[normalizedPathname] || titles["/admin"];
 
   return (

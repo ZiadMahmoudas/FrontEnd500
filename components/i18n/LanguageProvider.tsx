@@ -1,6 +1,15 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { usePathname } from "next/navigation";
 import { translateArabicText, type Locale } from "@/lib/i18n/translations";
 
@@ -15,12 +24,12 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 const textOriginals = new WeakMap<Text, string>();
 const attributeOriginals = new WeakMap<Element, Map<string, string>>();
-const hrefOriginals = new WeakMap<HTMLAnchorElement, string>();
-const attrs = ["placeholder", "title", "aria-label", "alt"] as const;
+const attrs = ["placeholder", "title", "aria-label", "alt", "data-label"] as const;
 const ignoredTags = new Set(["SCRIPT", "STYLE", "CODE", "PRE", "TEXTAREA"]);
+let titleOriginal = "";
 
 function shouldSkip(node: Node) {
-  const element = node.nodeType === Node.ELEMENT_NODE ? node as Element : node.parentElement;
+  const element = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement;
   if (!element) return false;
   if (ignoredTags.has(element.tagName)) return true;
   return Boolean(element.closest("[data-no-translate], [translate='no'], [contenteditable='true']"));
@@ -54,41 +63,42 @@ function translateAttributes(element: Element, locale: Locale) {
   }
 }
 
-function localizeAnchor(element: Element, locale: Locale) {
-  if (!(element instanceof HTMLAnchorElement)) return;
-  const href = element.getAttribute("href");
-  if (!href || !href.startsWith("/") || href.startsWith("//")) return;
-  if (/^\/(?:_next|api)(?:\/|$)/.test(href) || /\.[^/]+$/.test(href)) return;
-  if (!hrefOriginals.has(element)) hrefOriginals.set(element, href.replace(/^\/en(?=\/|$)/, "") || "/");
-  const original = hrefOriginals.get(element) || "/";
-  const next = locale === "en" ? (original === "/" ? "/en" : `/en${original}`) : original;
-  if (href !== next) element.setAttribute("href", next);
-}
-
 function translateTree(root: Node, locale: Locale) {
   if (root.nodeType === Node.TEXT_NODE) {
     translateTextNode(root as Text, locale);
     return;
   }
-  if (root.nodeType === Node.ELEMENT_NODE) {
-    translateAttributes(root as Element, locale);
-    localizeAnchor(root as Element, locale);
-  }
+  if (root.nodeType === Node.ELEMENT_NODE) translateAttributes(root as Element, locale);
+
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
   let current: Node | null = walker.currentNode;
   while (current) {
     if (current.nodeType === Node.TEXT_NODE) translateTextNode(current as Text, locale);
-    else if (current.nodeType === Node.ELEMENT_NODE) {
-      translateAttributes(current as Element, locale);
-      localizeAnchor(current as Element, locale);
-    }
+    else if (current.nodeType === Node.ELEMENT_NODE) translateAttributes(current as Element, locale);
     current = walker.nextNode();
   }
 }
 
-function stripLocale(path: string) {
-  if (path === "/en" || path === "/ar") return "/";
-  return path.replace(/^\/(en|ar)(?=\/)/, "") || "/";
+function translateHead(locale: Locale) {
+  const title = document.title;
+  if (/[\u0600-\u06FF]/.test(title)) titleOriginal = title;
+  if (titleOriginal) document.title = locale === "en" ? translateArabicText(titleOriginal) : titleOriginal;
+  document.querySelectorAll<HTMLMetaElement>('meta[name="description"], meta[property="og:title"], meta[property="og:description"], meta[name="twitter:title"], meta[name="twitter:description"]').forEach(meta => {
+    const current = meta.content;
+    const originalKey = "i18nOriginal";
+    const dataset = meta.dataset as DOMStringMap & { i18nOriginal?: string };
+    if (!dataset[originalKey] && /[\u0600-\u06FF]/.test(current)) dataset[originalKey] = current;
+    const original = dataset[originalKey];
+    if (original) meta.content = locale === "en" ? translateArabicText(original) : original;
+  });
+}
+
+function readStoredLocale(fallback: Locale): Locale {
+  try {
+    return localStorage.getItem("elmohager-locale") === "en" ? "en" : fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 export function LanguageProvider({ children, initialLocale = "ar" }: { children: React.ReactNode; initialLocale?: Locale }) {
@@ -97,18 +107,24 @@ export function LanguageProvider({ children, initialLocale = "ar" }: { children:
   const translating = useRef(false);
 
   useEffect(() => {
-    setLocale(pathname === "/en" || pathname.startsWith("/en/") ? "en" : "ar");
-  }, [pathname]);
+    const stored = readStoredLocale(initialLocale);
+    if (stored !== locale) setLocale(stored);
+  // Initial preference must be read exactly once; route changes must not reset it.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    document.documentElement.lang = locale;
+    document.documentElement.lang = locale === "en" ? "en" : "ar";
     document.documentElement.dir = locale === "en" ? "ltr" : "rtl";
     document.documentElement.dataset.locale = locale;
+    document.body.dataset.locale = locale;
     document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
-    localStorage.setItem("elmohager-locale", locale);
+    try { localStorage.setItem("elmohager-locale", locale); } catch { /* storage may be unavailable */ }
 
     translating.current = true;
     translateTree(document.body, locale);
+    translateHead(locale);
+    document.documentElement.classList.remove("i18n-booting");
     translating.current = false;
 
     const observer = new MutationObserver(mutations => {
@@ -118,25 +134,39 @@ export function LanguageProvider({ children, initialLocale = "ar" }: { children:
         if (mutation.type === "characterData") translateTree(mutation.target, locale);
         else {
           mutation.addedNodes.forEach(node => translateTree(node, locale));
-          if (mutation.target.nodeType === Node.ELEMENT_NODE) {
-            translateAttributes(mutation.target as Element, locale);
-            localizeAnchor(mutation.target as Element, locale);
-          }
+          if (mutation.target.nodeType === Node.ELEMENT_NODE) translateAttributes(mutation.target as Element, locale);
         }
       }
+      translateHead(locale);
       translating.current = false;
     });
-    observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: [...attrs, "href"] });
-    return () => observer.disconnect();
+
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: [...attrs],
+    });
+
+    const originalAlert = window.alert.bind(window);
+    const originalConfirm = window.confirm.bind(window);
+    const originalPrompt = window.prompt.bind(window);
+    window.alert = (message?: unknown) => originalAlert(locale === "en" ? translateArabicText(String(message ?? "")) : String(message ?? ""));
+    window.confirm = (message?: string) => originalConfirm(locale === "en" ? translateArabicText(message || "") : message || "");
+    window.prompt = (message?: string, defaultValue?: string) => originalPrompt(locale === "en" ? translateArabicText(message || "") : message || "", defaultValue);
+
+    return () => {
+      observer.disconnect();
+      window.alert = originalAlert;
+      window.confirm = originalConfirm;
+      window.prompt = originalPrompt;
+    };
   }, [locale, pathname]);
 
   const switchLocale = useCallback((next: Locale) => {
     if (next === locale) return;
-    const base = stripLocale(window.location.pathname);
-    const targetPath = next === "en" ? (base === "/" ? "/en" : `/en${base}`) : base;
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; SameSite=Lax`;
-    localStorage.setItem("elmohager-locale", next);
-    window.location.assign(`${targetPath}${window.location.search}${window.location.hash}`);
+    startTransition(() => setLocale(next));
   }, [locale]);
 
   const value = useMemo<LanguageContextValue>(() => ({

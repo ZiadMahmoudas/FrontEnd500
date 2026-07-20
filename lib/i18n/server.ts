@@ -1,12 +1,22 @@
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import type { Locale } from "./translations";
 
+/**
+ * Static page content is rendered in Arabic so the client translator can switch
+ * in both directions without a full reload. The preferred language is still
+ * read from the cookie and passed to the root provider for the initial UI.
+ */
 export async function getServerLocale(): Promise<Locale> {
-  const requestHeaders = await headers();
-  return requestHeaders.get("x-elmohager-locale") === "en" ? "en" : "ar";
+  return "ar";
 }
 
-export function localizedPath(locale: Locale, path: string): string {
-  const normalized = path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
-  return locale === "en" ? `/en${normalized}` || "/en" : normalized || "/";
+export async function getPreferredLocale(): Promise<Locale> {
+  const cookieStore = await cookies();
+  return cookieStore.get("NEXT_LOCALE")?.value === "en" ? "en" : "ar";
+}
+
+/** One route tree only: language never changes the current URL. */
+export function localizedPath(_locale: Locale, path: string): string {
+  if (!path) return "/";
+  return path.startsWith("/") ? path : `/${path}`;
 }

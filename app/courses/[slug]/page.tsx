@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: en ? "Course details" : "تفاصيل الكورس",
       description: en ? "Course details on Elmohager educational platform." : siteConfig.description,
-      alternates: { canonical: localizedPath(locale, `/courses/${slug}`), languages: { "ar-EG": `/courses/${slug}`, "en-US": `/en/courses/${slug}` } },
+      alternates: { canonical: localizedPath(locale, `/courses/${slug}`) },
     };
   }
 
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: course.title,
     description,
     keywords: [...siteConfig.keywords, ...course.tags],
-    alternates: { canonical: localizedPath(locale, `/courses/${course.slug}`), languages: { "ar-EG": `/courses/${course.slug}`, "en-US": `/en/courses/${course.slug}` } },
+    alternates: { canonical: localizedPath(locale, `/courses/${course.slug}`) },
     openGraph: {
       type: "website",
       title: `${course.title} | ${en ? "Elmohager Platform" : "منصة المهاجر"}`,

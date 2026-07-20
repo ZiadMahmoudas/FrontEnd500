@@ -22,7 +22,7 @@ const navItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const normalizedPathname = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const normalizedPathname = pathname || "/";
   const { signOut } = useAuth();
 
   return (

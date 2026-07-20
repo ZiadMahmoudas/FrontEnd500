@@ -5,7 +5,7 @@ import { getServerLocale, localizedPath } from "@/lib/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getServerLocale();
-  return { title: locale === "en" ? "Privacy Policy" : "سياسة الخصوصية", description: locale === "en" ? "Privacy policy for Elmohager educational platform." : "سياسة الخصوصية لمنصة المهاجر التعليمية.", alternates: { canonical: localizedPath(locale, "/privacy"), languages: { "ar-EG": "/privacy", "en-US": "/en/privacy" } } };
+  return { title: locale === "en" ? "Privacy Policy" : "سياسة الخصوصية", description: locale === "en" ? "Privacy policy for Elmohager educational platform." : "سياسة الخصوصية لمنصة المهاجر التعليمية.", alternates: { canonical: localizedPath(locale, "/privacy") } };
 }
 export default async function PrivacyPage() {
   const en = (await getServerLocale()) === "en";

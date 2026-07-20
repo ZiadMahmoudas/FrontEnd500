@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: path, languages: { "ar-EG": "/about", "en-US": "/en/about" } },
+    alternates: { canonical: path },
     openGraph: { title: en ? "Mr. Mahmoud Elmohager | The Final Seconds" : "الأستاذ محمود المهاجر | الثواني الأخيرة", description, url: path, images: [siteConfig.ogImage], locale: en ? "en_US" : "ar_EG" },
   };
 }

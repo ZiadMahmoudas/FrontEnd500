@@ -99,3 +99,41 @@ html[dir="ltr"] .font-heading { font-family: Inter, Arial, sans-serif !important
 html[dir="ltr"] .admin-sidebar { border-left-width: 0; border-right-width: 1px; }
 html[dir="ltr"] input, html[dir="ltr"] textarea, html[dir="ltr"] select { text-align: left; }
 html[dir="rtl"] input, html[dir="rtl"] textarea, html[dir="rtl"] select { text-align: right; }
+
+/* Instant bilingual SPA mode ------------------------------------------------ */
+html.i18n-booting body {
+  visibility: hidden;
+}
+
+html[dir="ltr"] body {
+  font-family: Inter, Cairo, sans-serif;
+  text-align: left;
+}
+
+html[dir="rtl"] body {
+  font-family: Tajawal, Cairo, sans-serif;
+  text-align: right;
+}
+
+/* Mirror the most common direction-specific utilities without reloading or
+   maintaining a second route tree. This keeps forms and drawers polished when
+   language changes in place. */
+html[dir="ltr"] [class~="right-3"] { right: auto !important; left: .75rem !important; }
+html[dir="ltr"] [class~="right-4"] { right: auto !important; left: 1rem !important; }
+html[dir="ltr"] [class~="right-5"] { right: auto !important; left: 1.25rem !important; }
+html[dir="ltr"] [class~="left-3"] { left: auto !important; right: .75rem !important; }
+html[dir="ltr"] [class~="left-4"] { left: auto !important; right: 1rem !important; }
+html[dir="ltr"] [class~="left-5"] { left: auto !important; right: 1.25rem !important; }
+html[dir="ltr"] [class~="pr-10"] { padding-right: 1rem !important; padding-left: 2.5rem !important; }
+html[dir="ltr"] [class~="pr-11"] { padding-right: 1rem !important; padding-left: 2.75rem !important; }
+html[dir="ltr"] [class~="pr-12"] { padding-right: 1rem !important; padding-left: 3rem !important; }
+html[dir="ltr"] [class~="pl-10"] { padding-left: 1rem !important; padding-right: 2.5rem !important; }
+html[dir="ltr"] [class~="pl-11"] { padding-left: 1rem !important; padding-right: 2.75rem !important; }
+html[dir="ltr"] [class~="pl-12"] { padding-left: 1rem !important; padding-right: 3rem !important; }
+html[dir="ltr"] [class~="text-right"] { text-align: left !important; }
+html[dir="ltr"] [class~="text-left"] { text-align: right !important; }
+html[dir="ltr"] [class~="bg-gradient-to-l"] { background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

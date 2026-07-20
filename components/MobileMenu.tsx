@@ -28,7 +28,7 @@ export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const normalizedPathname = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const normalizedPathname = pathname || "/";
   const { user, signOut } = useAuth();
   const { isEnglish } = useLanguage();
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "201110037311";
